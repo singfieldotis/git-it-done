@@ -23,18 +23,18 @@ var getUserRepos = function (user) {
   // make a request to the url
   fetch(apiUrl)
     .then(function (response) {
-    if (response.ok) {
-    response.json().then(function (data) {
-      displayRepos(data, user);
+      if (response.ok) {
+        response.json().then(function (data) {
+          displayRepos(data, user);
+        });
+      } else {
+        alert("Error: " + response.statusText);
+      }
+    })
+    .catch(function (error) {
+      // Notice this `.catch()` getting chained onto the end of the `.then()` method
+      alert("Unable to connect to GitHub");
     });
-  } else {
-    alert("Error: " + response.statusText);
-  }
-  })
-  .catch(function(error){
-    // Notice this `.catch()` getting chained onto the end of the `.then()` method
-    alert("Unable to connect to GitHub")
-  });
 };
 
 var displayRepos = function (repos, searchTerm) {
@@ -52,9 +52,10 @@ var displayRepos = function (repos, searchTerm) {
     var repoName = repos[i].owner.login + "/" + repos[i].name;
 
     // create a container for each repo
-    var repoEl = document.createElement("div");
+    var repoEl = document.createElement("a");
     repoEl.classList = "list-item flex-row justify-space-between align-center";
-
+    // ensure links created are in path relative to index.html and not js page
+    repoEl.setAttribute("href", "./single-repo.html?repo=" + repoName);
     // create a span element to hold repository name
     var titleEl = document.createElement("span");
     titleEl.textContent = repoName;
